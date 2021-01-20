@@ -10,7 +10,6 @@
     component.style.lineHeight = "10vh";
     component.style.zIndex = "0";
     component.style.fontSize = "xx-large";
-    component.style.fontWeight = "300";
   }
 
   onMount(() => {
@@ -34,6 +33,6 @@
     line-height: 100vh;
     text-align: center;
     font-size: 10vw;
-    font-weight: 100;
+    font-weight: 200;
   }
 </style>
