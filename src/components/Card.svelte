@@ -2,9 +2,18 @@
   import { createEventDispatcher } from "svelte";
 
   const dispatch = createEventDispatcher();
+  
+  let timer;
 </script>
 
-<div class="card" on:click={() => dispatch("click")}>
+<div
+  class="card"
+  on:mousedown={() => (timer = Date.now())}
+  on:mouseup={() => {
+    console.log(timer - Date.now());
+    Date.now() - timer > 500 ? dispatch("longClick") : dispatch("click");
+  }}
+>
   <div class="title">
     <slot name="title" />
   </div>
@@ -17,8 +26,21 @@
   .card {
     padding: 0.5rem;
     margin: 0.3rem 0.3rem 0 0.3rem;
-    height: 3rem;
+    height: min-content;
     background-color: #f5f5f5;
     border-radius: 1rem;
+  }
+  .title {
+    font-weight: 300;
+    font-size: large;
+  }
+  .body {
+    width: 100%;
+    min-height: 1rem;
+    font-weight: 400;
+    text-align: end;
+    overflow: hidden;
+    word-break: break-all;
+    user-select: none;
   }
 </style>

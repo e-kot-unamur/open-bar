@@ -22,9 +22,7 @@
 
   main {
     width: 100%;
-    height: 100%;
     background-color: var(--primary);
-    overflow: hidden;
   }
 
   .topbar {
@@ -32,11 +30,5 @@
     text-align: center;
     font-size: xx-large;
     font-weight: 300;
-  }
-
-  @media (min-width: 640px) {
-    main {
-      max-width: none;
-    }
   }
 </style>
