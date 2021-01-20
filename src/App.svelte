@@ -10,7 +10,7 @@
     <div class="title">OpenBar</div>
   </div>
 
-  <Switcher views={{People, Settings}} />
+  <Switcher views={{ People, Settings }} />
 </main>
 
 <style>
@@ -24,6 +24,7 @@
     width: 100%;
     height: 100%;
     background-color: var(--primary);
+    overflow: hidden;
   }
 
   .topbar {
