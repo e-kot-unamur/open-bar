@@ -4,8 +4,6 @@
   let component;
 
   function handleScroll() {
-    console.log(component);
-
     component.style.height = "10vh";
     component.style.lineHeight = "10vh";
     component.style.zIndex = "0";

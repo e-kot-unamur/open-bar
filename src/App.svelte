@@ -13,7 +13,7 @@
 <style>
   :global(body) {
     --primary: #272932;
-    --highlight: #5398be;
+    --highlight: #1DE068;
     color: #fff;
   }
   main {

@@ -13,6 +13,13 @@
     { name: "Evan", bars: 3 },
     { name: "Thibaut", bars: 3 },
   ];
+
+  function addParticipant(_, name) {
+    participants = [
+      ...participants,
+      { name: name ?? "New participant", bars: 0 },
+    ];
+  }
 </script>
 
 <Container>
@@ -33,11 +40,7 @@
     </Card>
   {/each}
 </Container>
-<div
-  class="add-btn"
-  on:click={() =>
-    (participants = [...participants, { name: "New participant", bars: 0 }])}
->+</div>
+<div class="add-btn" on:click={addParticipant}>+</div>
 
 <style>
   .tally-marks {

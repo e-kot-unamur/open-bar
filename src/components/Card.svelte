@@ -28,6 +28,7 @@
     height: min-content;
     background-color: #f5f5f5;
     border-radius: 1rem;
+    transition: 200ms;
   }
   .title {
     font-weight: 300;
@@ -41,5 +42,8 @@
     overflow: hidden;
     word-break: break-all;
     user-select: none;
+  }
+  .card:active{
+    background-color: var(--highlight);
   }
 </style>

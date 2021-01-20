@@ -53,6 +53,7 @@
   }
   .active {
     color: var(--highlight);
+    border-bottom: 1.4rem solid var(--highlight);
   }
 
   .slot {
