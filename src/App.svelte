@@ -1,15 +1,12 @@
 <script>
-  import Container from "./components/Container.svelte";
   import Switcher from "./components/Switcher.svelte";
+  import Topbar from "./components/Topbar.svelte";
   import People from "./views/People.svelte";
   import Settings from "./views/Settings.svelte";
 </script>
 
 <main>
-  <div class="topbar">
-    <div class="title">OpenBar</div>
-  </div>
-
+  <Topbar />
   <Switcher views={{ People, Settings }} />
 </main>
 
@@ -19,16 +16,11 @@
     --highlight: #5398be;
     color: #fff;
   }
-
   main {
     width: 100%;
-    background-color: var(--primary);
-  }
-
-  .topbar {
-    padding: 4rem;
-    text-align: center;
-    font-size: xx-large;
-    font-weight: 300;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
 </style>

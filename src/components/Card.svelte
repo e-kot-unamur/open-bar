@@ -2,7 +2,7 @@
   import { createEventDispatcher } from "svelte";
 
   const dispatch = createEventDispatcher();
-  
+
   let timer;
 </script>
 
@@ -10,7 +10,6 @@
   class="card"
   on:mousedown={() => (timer = Date.now())}
   on:mouseup={() => {
-    console.log(timer - Date.now());
     Date.now() - timer > 500 ? dispatch("longClick") : dispatch("click");
   }}
 >

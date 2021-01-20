@@ -3,27 +3,27 @@
   import Container from "../components/Container.svelte";
 
   // TODO: Connect with backend
-  const participants = {
-    Hugo: 10,
-    Piras: 3,
-    Baetsle: 2,
-    Pierre: 2,
-    Quentain: 100,
-    Thibaut: 3,
-    Basile: 1,
-    Evan: 3,
-  };
+  let participants = [
+    { name: "Hugo", bars: 10 },
+    { name: "Piras", bars: 3 },
+    { name: "Baetsle", bars: 3 },
+    { name: "Pierre", bars: 3 },
+    { name: "Quentain", bars: 100 },
+    { name: "Basile", bars: 3 },
+    { name: "Evan", bars: 3 },
+    { name: "Thibaut", bars: 3 },
+  ];
 </script>
 
 <Container>
-  {#each Object.entries(participants) as [participant, bars]}
+  {#each participants as { name, bars }}
     <Card
-      on:click={() => participants[participant]++}
+      on:click={() => bars++}
       on:longClick={() => {
-        if (participants[participant] > 0) participants[participant]--;
+        if (bars > 0) bars--;
       }}
     >
-      <span slot="title">{participant}</span>
+      <span slot="title">{name}</span>
       <span slot="body">
         {#each Array((bars - (bars % 5)) / 5) as _}
           <span class="tally-marks">IIII</span>
@@ -33,10 +33,29 @@
     </Card>
   {/each}
 </Container>
+<div
+  class="add-btn"
+  on:click={() =>
+    (participants = [...participants, { name: "New participant", bars: 0 }])}
+>+</div>
 
 <style>
   .tally-marks {
     text-decoration: line-through;
     padding: 0.2rem;
+  }
+
+  .add-btn {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 100;
+    background-color: var(--primary);
+    width: 2.5rem;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    text-align: center;
+    border-radius: 100%;
+    user-select: none;
   }
 </style>
