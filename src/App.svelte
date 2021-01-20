@@ -1,30 +1,41 @@
 <script>
-	export let name;
+  import Container from "./components/Container.svelte";
+  import Switcher from "./components/Switcher.svelte";
+  import People from "./views/People.svelte";
+  import Settings from "./views/Settings.svelte";
 </script>
 
 <main>
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
+  <div class="topbar">
+    <div class="title">OpenBar</div>
+  </div>
+
+  <Switcher views={{People, Settings}} />
 </main>
 
 <style>
-	main {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	}
+  :global(body) {
+    --primary: #272932;
+    --highlight: #5398be;
+    color: #fff;
+  }
 
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
+  main {
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary);
+  }
 
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
-	}
+  .topbar {
+    padding: 4rem;
+    text-align: center;
+    font-size: xx-large;
+    font-weight: 300;
+  }
+
+  @media (min-width: 640px) {
+    main {
+      max-width: none;
+    }
+  }
 </style>
