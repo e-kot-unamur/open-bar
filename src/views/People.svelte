@@ -1,6 +1,9 @@
 <script>
   import Card from "../components/Card.svelte";
   import Container from "../components/Container.svelte";
+  import Input from "../components/Input.svelte";
+
+  let showInput = false;
 
   // TODO: Connect with backend
   let participants = [
@@ -14,11 +17,8 @@
     { name: "Thibaut", bars: 3 },
   ];
 
-  function addParticipant(_, name) {
-    participants = [
-      ...participants,
-      { name: name ?? "New participant", bars: 0 },
-    ];
+  function addParticipant(name) {
+    participants = [...participants, { name, bars: 0 }];
   }
 </script>
 
@@ -40,7 +40,15 @@
     </Card>
   {/each}
 </Container>
-<div class="add-btn" on:click={addParticipant}>+</div>
+
+<div class="add-btn" on:click={() => (showInput = true)}>+</div>
+<Input
+  on:confirm={(e) => {
+    addParticipant(e.detail);
+    showInput = false;
+  }}
+  show={showInput}
+/>
 
 <style>
   .tally-marks {
