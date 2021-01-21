@@ -58,7 +58,13 @@ func listen(ws *websocket.Conn) {
 		msgType, bytes, err := ws.ReadMessage() // int, []byte, error
 		if err != nil {
 			log.Println(err)
-			// TODO remove client from clients
+			// remove closed connection from clients
+			for i, client := range clients {
+				if ws == client {
+					clients[i] = clients[len(clients)-1]
+					clients = clients[:len(clients)-1]
+				}
+			}
 			break
 		}
 		// convert bytes to a struct
@@ -83,12 +89,20 @@ func handleEvent(event WebsocketEvent) ([]byte, error) {
 	var answer WebsocketEvent
 	switch event.Type {
 	case "newUser":
-		// TODO set the ID to the number of actual users
-		answer = WebsocketEvent{Type: "newUser", User: User{-1, event.Name, 0}}
+		user := User{len(data.Users), event.Name, 0}
+		answer = WebsocketEvent{Type: "newUser", User: user}
+		data.Users = append(data.Users, user)
 	case "updateDebt":
 		answer = event
+		for id, user := range data.Users {
+			if user.ID == event.ID {
+				data.Users[id].Debt = event.Debt
+			}
+		}
+		fmt.Println(data.Users)
 	case "updatePrice":
 		answer = event
+		data.Price = event.Price
 	default:
 		return make([]byte, 0), errors.New("Unknown type event")
 	}
