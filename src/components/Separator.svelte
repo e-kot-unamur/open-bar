@@ -12,7 +12,7 @@
         font-size: x-large;
     }
     .body {
-        font-weight: 300;
-        font-size: medium;
+        font-weight: 200;
+        font-size: small;
     }
 </style>

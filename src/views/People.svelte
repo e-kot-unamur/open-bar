@@ -10,6 +10,12 @@
 
 <Container>
   {#if $store.users && $store.users.length}
+    <Separator>
+      <span slot="title">People</span>
+      <span slot="body">
+        Press on the desired participant to add a bar, or long press to remove one
+      </span>
+    </Separator>
     {#each $store.users as { id, name, debt }}
       <Card
         on:click={() => store.updateDebt(id, debt + 1)}

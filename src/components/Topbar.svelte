@@ -42,15 +42,16 @@
     line-height: 100vh;
 
     text-align: center;
+    font-size: 10vh;
 
     display: flex;
     flex-direction: column;
     justify-content: center;
 
     transition: 500ms;
+    text-shadow: #000 1px 0 10px;
   }
   .title {
-    font-size: 10vw;
     font-weight: 200;
   }
   .loader {
@@ -58,7 +59,7 @@
     bottom: 1rem;
     width: 100%;
     line-height: initial;
-    font-size: 5vw;
+    font-size: 1.7rem;
     font-weight: 100;
   }
 </style>

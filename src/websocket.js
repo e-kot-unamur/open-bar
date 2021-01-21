@@ -1,3 +1,5 @@
 import { writable } from "svelte/store";
 
-export default writable(new WebSocket('ws://localhost:8000/ws'));
+const host = window.location.href.replace('http', 'ws');
+
+export default writable(new WebSocket(`${host}ws`));

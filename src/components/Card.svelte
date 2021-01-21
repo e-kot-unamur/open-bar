@@ -34,6 +34,7 @@
     font-weight: 300;
     font-size: large;
     user-select: none;
+    margin-bottom: 0.8rem;
   }
   .body {
     width: 100%;
