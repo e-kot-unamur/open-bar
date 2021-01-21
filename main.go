@@ -9,5 +9,10 @@ func main() {
 	log.Println("Application starting...")
 	setupRoutes()
 	log.Println("Listening on :8000")
-	log.Fatalln(http.ListenAndServe(":8000", nil))
+	err := http.ListenAndServe(":8000", nil)
+	if err != nil {
+		log.Fatal("ListenAndServe: ", err)
+	} else {
+		log.Println("Server terminated.")
+	}
 }

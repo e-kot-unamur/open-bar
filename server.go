@@ -45,7 +45,7 @@ func listen(ws *websocket.Conn) {
 		msgType, bytes, err := ws.ReadMessage() // int, []byte, error
 		if err != nil {
 			log.Println(err)
-			continue
+			break
 		}
 		// convert bytes to a struct
 		var message WebsocketEvent
