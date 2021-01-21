@@ -5,14 +5,10 @@
   import store from "../store";
 
   let showInput = false;
-
-  function addParticipant(name) {
-    $store.debts = [...$store.debts, { name, bars: 0 }];
-  }
 </script>
 
 <Container>
-  {#each $store.debts as { id, name, debt }}
+  {#each $store.users as { id, name, debt }}
     <Card
       on:click={() => store.updateDebt(id, debt + 1)}
       on:longClick={() => {

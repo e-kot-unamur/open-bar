@@ -8,8 +8,8 @@
 
   $: if (price === null) {
     price = $store.price;
-  } else {
-    store.updatePrice($store.price);
+  } else if (price !== $store.price) {
+    store.updatePrice(price);
   }
 </script>
 
@@ -37,7 +37,7 @@
     <span slot="body">Long click on the concerned participant</span>
   </Separator>
 
-  {#each $store.debts as { id, name, debt }}
+  {#each $store.users as { id, name, debt }}
     <Card on:longClick={() => store.updateDebt(id, 0)}>
       <span slot="title">
         {name}
