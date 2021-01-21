@@ -32,19 +32,25 @@
     </span>
   </Card>
 
-  <Separator>
-    <span slot="title">Mark a debt as paid</span>
-    <span slot="body">Long click on the concerned participant</span>
-  </Separator>
-
-  {#each $store.users as { id, name, debt }}
-    <Card on:longClick={() => store.updateDebt(id, 0)}>
-      <span slot="title">
-        {name}
-      </span>
-      <span slot="body">
-        {(debt * $store.price).toFixed(2)}€
-      </span>
-    </Card>
-  {/each}
+  {#if !$store.users}
+    <Separator>
+      <span slot="title">There is nothing here yet...</span>
+      <span slot="body">Start by adding someone first !</span>
+    </Separator>
+  {:else}
+    <Separator>
+      <span slot="title">Mark a debt as paid</span>
+      <span slot="body">Long click on the concerned participant</span>
+    </Separator>
+    {#each $store.users as { id, name, debt }}
+      <Card on:longClick={() => store.updateDebt(id, 0)}>
+        <span slot="title">
+          {name}
+        </span>
+        <span slot="body">
+          {(debt * $store.price).toFixed(2)}€
+        </span>
+      </Card>
+    {/each}
+  {/if}
 </Container>

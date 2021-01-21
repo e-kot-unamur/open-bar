@@ -3,17 +3,22 @@
   import Topbar from "./components/Topbar.svelte";
   import People from "./views/People.svelte";
   import Settings from "./views/Settings.svelte";
+  import store from "./store.js";
+
+  let loading;
+
+  $: loading = $store.price === undefined;
 </script>
 
 <main>
-  <Topbar />
+  <Topbar {loading} />
   <Switcher views={{ People, Settings }} />
 </main>
 
 <style>
   :global(body) {
     --primary: #272932;
-    --highlight: #1DE068;
+    --highlight: #1de068;
     color: #fff;
   }
   main {

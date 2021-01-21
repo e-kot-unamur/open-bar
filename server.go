@@ -10,6 +10,7 @@ import (
 )
 
 var clients []*websocket.Conn
+var data OpenBarData
 
 func setupRoutes() {
 	// Serve frontend build
@@ -29,13 +30,25 @@ func handleWs(writer http.ResponseWriter, req *http.Request) {
 	// CORS Handler, remove when quitting development
 	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 
-	ws, err := upgrader.Upgrade(writer, req, nil)
+	client, err := upgrader.Upgrade(writer, req, nil)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	clients = append(clients, ws)
-	listen(ws)
+
+	// Send user the saved data
+	all := WebsocketEvent{Type: "allData", All: data}
+	if message, err := json.Marshal(all); err != nil {
+		log.Println(err)
+		return
+	} else if err := client.WriteMessage(1, message); err != nil {
+		log.Println(err)
+		return
+	}
+
+	// Keep track of the client
+	clients = append(clients, client)
+	listen(client)
 }
 
 func listen(ws *websocket.Conn) {
@@ -45,6 +58,7 @@ func listen(ws *websocket.Conn) {
 		msgType, bytes, err := ws.ReadMessage() // int, []byte, error
 		if err != nil {
 			log.Println(err)
+			// TODO remove client from clients
 			break
 		}
 		// convert bytes to a struct
