@@ -24,11 +24,12 @@ ws.subscribe((value) => {
     const message = JSON.parse(e.data);
     console.debug(message);
 
-    //TODO handle ws events here
-    switch (message.event) {
+    //TODO handle ws types here
+    switch (message.type) {
       case "newUser":
         store.update((value) => {
           value.users = [...value.users, message.user];
+
           return value;
         })
         break;
@@ -57,7 +58,7 @@ function send(payload) {
 export default {
   subscribe: store.subscribe,
 
-  addParticipant: (name) => send({ event: "newUser", name }),
-  updatePrice: (price) => send({ event: "updatePrice", price }),
-  updateDebt: (id, int) => send({ event: "updateDebt", id, debt: int }),
+  addParticipant: (name) => send({ type: "newUser", name }),
+  updatePrice: (price) => send({ type: "updatePrice", price }),
+  updateDebt: (id, int) => send({ type: "updateDebt", id, debt: int }),
 };
