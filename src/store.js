@@ -38,5 +38,5 @@ export default {
 
     addParticipant: (name) => send({ event: "newUser", name }),
     updatePrice: (price) => send({ event: "updatePrice", price }),
-    updateDebt: (id, int) => send({ event: "updateDebt", id, value: int }),
+    updateDebt: (id, int) => send({ event: "updateDebt", id, debt: int }),
 };

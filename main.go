@@ -1,32 +1,51 @@
 package main
 
 import (
-	"fmt"
+	"encoding/json"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/websocket"
 )
 
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
-}
+var clients []*websocket.Conn
 
 func readWebsocket(ws *websocket.Conn) {
+
+	type Message struct {
+		Event string
+		Id    int
+		Name  string
+		Debt  int
+		Price float64
+	}
+
 	for {
-		msgType, message, err := ws.ReadMessage()
+		msgType, message, err := ws.ReadMessage() // int, []byte, error
 		if err != nil {
 			log.Println(err)
-			return
+			continue
 		}
 
-		// TODO remove me
-		fmt.Println(string(message))
-
-		if err := ws.WriteMessage(msgType, message); err != nil {
+		var m Message
+		err = json.Unmarshal(message, &m)
+		if err != nil {
 			log.Println(err)
-			return
+			continue
+		}
+		log.Println(m)
+
+		// TODO save changes locally
+
+		broadcastWebsockets(clients, msgType, message)
+	}
+}
+
+func broadcastWebsockets(clients []*websocket.Conn, msgType int, message []byte) {
+	for _, client := range clients {
+		if err := client.WriteMessage(msgType, message); err != nil {
+			log.Println(err)
+			continue
 		}
 	}
 }
@@ -34,13 +53,21 @@ func readWebsocket(ws *websocket.Conn) {
 func handleWs(writer http.ResponseWriter, req *http.Request) {
 	log.Println("Initializing a new websocket")
 
+	upgrader := websocket.Upgrader{
+		ReadBufferSize:  1024,
+		WriteBufferSize: 1024,
+	}
+
 	// CORS Handler, remove when quitting development
 	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 
 	ws, err := upgrader.Upgrade(writer, req, nil)
 	if err != nil {
 		log.Println(err)
+		return
 	}
+
+	clients = append(clients, ws)
 
 	readWebsocket(ws)
 }
