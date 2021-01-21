@@ -33,6 +33,7 @@
   .title {
     font-weight: 300;
     font-size: large;
+    user-select: none;
   }
   .body {
     width: 100%;

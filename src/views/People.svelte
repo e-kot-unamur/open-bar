@@ -12,19 +12,19 @@
 </script>
 
 <Container>
-  {#each $store.debts as { name, bars }}
+  {#each $store.debts as { id, name, debt }}
     <Card
-      on:click={() => bars++}
+      on:click={() => store.updateDebt(id, debt + 1)}
       on:longClick={() => {
-        if (bars > 0) bars--;
+        if (debt > 0) store.updateDebt(id, debt - 1);
       }}
     >
-      <span slot="title">{name} ({(bars * $store.price).toFixed(2)}€)</span>
+      <span slot="title">{name} ({(debt * $store.price).toFixed(2)}€)</span>
       <span slot="body">
-        {#each Array((bars - (bars % 5)) / 5) as _}
+        {#each Array((debt - (debt % 5)) / 5) as _}
           <span class="tally-marks">IIII</span>
         {/each}
-        <span>{"I".repeat(bars % 5)}</span>
+        <span>{"I".repeat(debt % 5)}</span>
       </span>
     </Card>
   {/each}
@@ -33,7 +33,7 @@
 <div class="add-btn" on:click={() => (showInput = true)}>+</div>
 <Input
   on:confirm={(e) => {
-    addParticipant(e.detail);
+    store.addParticipant(e.detail);
     showInput = false;
   }}
   show={showInput}

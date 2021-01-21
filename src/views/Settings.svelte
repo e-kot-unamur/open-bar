@@ -4,8 +4,13 @@
   import Separator from "../components/Separator.svelte";
   import store from "../store";
 
-  $: if ($store.price === null) $store.price = 0.5;
-  $: console.log($store.price);
+  let price = $store.price;
+
+  $: if (price === null) {
+    price = $store.price;
+  } else {
+    store.updatePrice($store.price);
+  }
 </script>
 
 <Container>
@@ -22,7 +27,7 @@
         min="0.01"
         max="1.5"
         step="0.01"
-        bind:value={$store.price}
+        bind:value={price}
       />
     </span>
   </Card>
@@ -32,13 +37,13 @@
     <span slot="body">Long click on the concerned participant</span>
   </Separator>
 
-  {#each $store.debts as { name, bars }}
-    <Card on:longClick={() => (bars = 0)}>
+  {#each $store.debts as { id, name, debt }}
+    <Card on:longClick={() => store.updateDebt(id, 0)}>
       <span slot="title">
         {name}
       </span>
       <span slot="body">
-        {(bars * $store.price).toFixed(2)}€
+        {(debt * $store.price).toFixed(2)}€
       </span>
     </Card>
   {/each}
