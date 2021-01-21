@@ -2,35 +2,24 @@
   import Card from "../components/Card.svelte";
   import Container from "../components/Container.svelte";
   import Input from "../components/Input.svelte";
+  import store from "../store";
 
   let showInput = false;
 
-  // TODO: Connect with backend
-  let participants = [
-    { name: "Hugo", bars: 10 },
-    { name: "Piras", bars: 3 },
-    { name: "Baetsle", bars: 3 },
-    { name: "Pierre", bars: 3 },
-    { name: "Quentain", bars: 100 },
-    { name: "Basile", bars: 3 },
-    { name: "Evan", bars: 3 },
-    { name: "Thibaut", bars: 3 },
-  ];
-
   function addParticipant(name) {
-    participants = [...participants, { name, bars: 0 }];
+    $store.debts = [...$store.debts, { name, bars: 0 }];
   }
 </script>
 
 <Container>
-  {#each participants as { name, bars }}
+  {#each $store.debts as { name, bars }}
     <Card
       on:click={() => bars++}
       on:longClick={() => {
         if (bars > 0) bars--;
       }}
     >
-      <span slot="title">{name}</span>
+      <span slot="title">{name} ({(bars * $store.price).toFixed(2)}€)</span>
       <span slot="body">
         {#each Array((bars - (bars % 5)) / 5) as _}
           <span class="tally-marks">IIII</span>

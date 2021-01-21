@@ -1,15 +1,18 @@
 <script>
   import { createEventDispatcher } from "svelte";
+  import { fade } from "svelte/transition";
 
   export let show = false;
 
   let name = "";
 
   const dispatch = createEventDispatcher();
+
+  $: if (!show) name = "";
 </script>
 
 {#if show}
-  <div class="background">
+  <div in:fade class="background">
     <div class="container">
       <label for="name">Name :</label>
       <input type="text" id="name" maxlength="15" bind:value={name} />
