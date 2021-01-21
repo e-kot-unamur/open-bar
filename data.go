@@ -6,7 +6,7 @@ package main
 // single every time
 type WebsocketEvent struct {
 	Type  string      `json:"type"`
-	Id    int         `json:"id"`
+	ID    int         `json:"id"`
 	Name  string      `json:"name"`
 	Debt  int         `json:"debt"`
 	Price float64     `json:"price"`
@@ -15,7 +15,7 @@ type WebsocketEvent struct {
 }
 
 type User struct {
-	Id   int    `json:"id"`
+	ID   int    `json:"id"`
 	Name string `json:"name"`
 	Debt int    `json:"debt"`
 }
