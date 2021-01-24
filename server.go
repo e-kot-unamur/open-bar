@@ -5,7 +5,8 @@ import (
 	"errors"
 	"log"
 	"net/http"
-	"websocket"
+
+	"github.com/gorilla/websocket"
 )
 
 var clients []*websocket.Conn
