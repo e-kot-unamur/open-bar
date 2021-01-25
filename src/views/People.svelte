@@ -13,15 +13,14 @@
     <Separator>
       <span slot="title">People</span>
       <span slot="body">
-        Press on the desired participant to add a bar, or long press to remove one
+        Press on the desired participant to add a bar, or long press to remove
+        one
       </span>
     </Separator>
     {#each $store.users as { id, name, debt }}
       <Card
-        on:click={() => store.updateDebt(id, debt + 1)}
-        on:longClick={() => {
-          if (debt > 0) store.updateDebt(id, debt - 1);
-        }}
+        on:shortclick={() => store.updateDebt(id, debt + 1)}
+        on:longclick={() => debt > 0 && store.updateDebt(id, debt - 1)}
       >
         <span slot="title">{name} ({(debt * $store.price).toFixed(2)}€)</span>
         <span slot="body">

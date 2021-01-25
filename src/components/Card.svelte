@@ -1,17 +1,12 @@
 <script>
-  import { createEventDispatcher } from "svelte";
-
-  const dispatch = createEventDispatcher();
-
-  let timer;
+  import { handleClickDuration as clickduration } from "./clickduration";
 </script>
 
 <div
   class="card"
-  on:mousedown={() => (timer = Date.now())}
-  on:mouseup={() => {
-    Date.now() - timer > 500 ? dispatch("longClick") : dispatch("click");
-  }}
+  use:clickduration
+  on:longclick
+  on:shortclick
 >
   <div class="title">
     <slot name="title" />
@@ -45,7 +40,7 @@
     word-break: break-all;
     user-select: none;
   }
-  .card:active{
+  .card:active {
     background-color: var(--highlight);
   }
 </style>
