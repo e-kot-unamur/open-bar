@@ -11,11 +11,18 @@ import (
 )
 
 const (
-	pongWait   = 5 * time.Second
+	pongWait   = 30 * time.Second
 	pingPeriod = (pongWait * 9) / 10
 )
 
-var clients []*websocket.Conn
+var clients clientSlice
+
+type client struct {
+	conn *websocket.Conn
+	send chan []byte
+}
+
+type clientSlice []client
 
 func setupRoutes() {
 	http.Handle("/", http.FileServer(http.Dir("./public")))
@@ -33,44 +40,44 @@ func handleWs(writer http.ResponseWriter, req *http.Request) {
 	// FIXME : CORS Handler, remove when quitting development
 	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 
-	client, err := upgrader.Upgrade(writer, req, nil)
+	// Upgrade to a ws connection
+	ws, err := upgrader.Upgrade(writer, req, nil)
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
+	// Keep track of the client
+	client := client{ws, make(chan []byte)}
+	clients = append(clients, client)
+	go client.listener()
+	go client.sender()
+
 	// Send user the saved data
 	all := websocketEvent{Type: "allData", All: data}
-	if message, err := json.Marshal(all); err != nil {
+	if allByte, err := json.Marshal(all); err != nil {
 		log.Println(err)
-		return
-	} else if err := client.WriteMessage(1, message); err != nil {
-		log.Println(err)
-		return
+	} else {
+		client.send <- allByte
 	}
-
-	// Keep track of the client
-	clients = append(clients, client)
-	go listen(client)
-	go send(client)
 }
 
-func listen(ws *websocket.Conn) {
+func (c client) listener() {
 
 	// Ping pong is a heartbeat default detection system
-	ws.SetPongHandler(func(string) error {
-		ws.SetReadDeadline(time.Now().Add(pongWait))
+	c.conn.SetPongHandler(func(string) error {
+		c.conn.SetReadDeadline(time.Now().Add(pongWait))
 		return nil
 	})
 
 	for {
 		// read bytes and check for error
-		msgType, bytes, err := ws.ReadMessage() // int, []byte, error
+		msgType, bytes, err := c.conn.ReadMessage() // int, []byte, error
 		if err != nil {
 			log.Println(err)
 			// remove closed connection from clients
 			for i, client := range clients {
-				if ws == client {
+				if c.conn == client.conn {
 					clients[i] = clients[len(clients)-1]
 					clients = clients[:len(clients)-1]
 				}
@@ -86,7 +93,7 @@ func listen(ws *websocket.Conn) {
 		}
 		// handle event, and broadcast it to clients
 		if answer, err := handleEvent(message); err == nil {
-			broadcast(clients, msgType, answer)
+			clients.broadcast(msgType, answer)
 		} else {
 			// TODO ? Inform sender ?
 			log.Println(err)
@@ -94,25 +101,39 @@ func listen(ws *websocket.Conn) {
 	}
 }
 
-func send(ws *websocket.Conn) {
+// All message sent will pass through this method,
+// Launching this as a goroutine ensures there won't be two
+// goroutine trying to write in the ws channel at the same time.
+func (c client) sender() {
 
 	ticker := time.NewTicker(pingPeriod)
-	defer func() {
-		ticker.Stop()
-		ws.Close()
-	}()
+
+	var err error
+	defer log.Println(err)
+	defer ticker.Stop()
+	defer c.conn.Close()
 
 	for {
 		select {
 		// Ping client to ensure he's still there that motherfucka
 		case <-ticker.C:
-			if err := ws.WriteMessage(websocket.PingMessage, nil); err != nil {
-				log.Println(err)
+			if err = c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+				return
+			}
+		case msg := <-c.send:
+			if err = c.conn.WriteMessage(1, msg); err != nil {
 				return
 			}
 		}
+
 	}
 
+}
+
+func (clients clientSlice) broadcast(msgType int, msg []byte) {
+	for _, client := range clients {
+		client.send <- msg
+	}
 }
 
 func handleEvent(event websocketEvent) ([]byte, error) {
@@ -138,13 +159,4 @@ func handleEvent(event websocketEvent) ([]byte, error) {
 	}
 	save(data, historyFile)
 	return json.Marshal(answer)
-}
-
-func broadcast(clients []*websocket.Conn, msgType int, message []byte) {
-	for _, client := range clients {
-		if err := client.WriteMessage(msgType, message); err != nil {
-			log.Println(err)
-			continue
-		}
-	}
 }
