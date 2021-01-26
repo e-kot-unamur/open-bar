@@ -5,8 +5,14 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/websocket"
+)
+
+const (
+	pongWait   = 5 * time.Second
+	pingPeriod = (pongWait * 9) / 10
 )
 
 var clients []*websocket.Conn
@@ -45,10 +51,18 @@ func handleWs(writer http.ResponseWriter, req *http.Request) {
 
 	// Keep track of the client
 	clients = append(clients, client)
-	listen(client)
+	go listen(client)
+	go send(client)
 }
 
 func listen(ws *websocket.Conn) {
+
+	// Ping pong is a heartbeat default detection system
+	ws.SetPongHandler(func(string) error {
+		ws.SetReadDeadline(time.Now().Add(pongWait))
+		return nil
+	})
+
 	for {
 		// read bytes and check for error
 		msgType, bytes, err := ws.ReadMessage() // int, []byte, error
@@ -78,6 +92,27 @@ func listen(ws *websocket.Conn) {
 			log.Println(err)
 		}
 	}
+}
+
+func send(ws *websocket.Conn) {
+
+	ticker := time.NewTicker(pingPeriod)
+	defer func() {
+		ticker.Stop()
+		ws.Close()
+	}()
+
+	for {
+		select {
+		// Ping client to ensure he's still there that motherfucka
+		case <-ticker.C:
+			if err := ws.WriteMessage(websocket.PingMessage, nil); err != nil {
+				log.Println(err)
+				return
+			}
+		}
+	}
+
 }
 
 func handleEvent(event websocketEvent) ([]byte, error) {
