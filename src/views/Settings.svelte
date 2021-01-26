@@ -43,7 +43,7 @@
       <span slot="body">Long click on the concerned participant</span>
     </Separator>
     {#each $store.users as { id, name, debt }}
-      <Card on:longClick={() => store.updateDebt(id, 0)}>
+      <Card on:longclick={() => store.updateDebt(id, 0)}>
         <span slot="title">
           {name}
         </span>
