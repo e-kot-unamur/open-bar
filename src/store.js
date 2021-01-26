@@ -7,9 +7,7 @@ const store = writable({
   users: undefined,
 });
 
-let socket;
-ws.subscribe((value) => {
-  socket = value;
+ws.subscribe((socket) => {
 
   socket.onerror = socket.onclose = () => {
     console.error("Connection with server lost");
@@ -48,14 +46,10 @@ ws.subscribe((value) => {
   }
 })
 
-function send(payload) {
-  if (socket.readyState) socket.send(JSON.stringify(payload))
-}
-
 export default {
   subscribe: store.subscribe,
   set: store.set,
-  addParticipant: (name) => send({ type: "newUser", name }),
-  updatePrice: (price) => send({ type: "updatePrice", price }),
-  updateDebt: (id, int) => send({ type: "updateDebt", id, debt: int }),
+  addParticipant: (name) => ws.send({ type: "newUser", name }),
+  updatePrice: (price) => ws.send({ type: "updatePrice", price }),
+  updateDebt: (id, int) => ws.send({ type: "updateDebt", id, debt: int }),
 };
