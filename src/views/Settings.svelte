@@ -4,13 +4,7 @@
   import Separator from "../components/Separator.svelte";
   import store from "../store";
 
-  let price = $store.price;
-
-  $: if (price === null) {
-    price = $store.price;
-  } else if (price !== $store.price) {
-    store.updatePrice(price);
-  }
+  $: store.updatePrice($store.price); 
 </script>
 
 <Container>
@@ -27,7 +21,7 @@
         min="0.01"
         max="1.5"
         step="0.01"
-        bind:value={price}
+        bind:value={$store.price}
       />
     </span>
   </Card>
