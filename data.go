@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"time"
 )
 
 // TODO payload optimization:
@@ -27,9 +28,16 @@ type userData struct {
 	Debt int    `json:"debt"`
 }
 
+type history struct {
+	Date     time.Time `json:"date"`
+	TargetID int       `json:"target"`
+	NewDebt  int       `json:"newDebt"`
+}
+
 type openBarData struct {
-	Price float64    `json:"price"`
-	Users []userData `json:"users"`
+	Price   float64    `json:"price"`
+	History []history  `json:"history"`
+	Users   []userData `json:"users"`
 }
 
 func load(path string) (dataJSON openBarData) {
@@ -44,12 +52,12 @@ func load(path string) (dataJSON openBarData) {
 	} else {
 		// File doesn't exist
 		dataJSON = openBarData{}
-		save(dataJSON, historyFile)
+		dataJSON.save(historyFile)
 	}
 	return dataJSON
 }
 
-func save(data openBarData, destination string) {
+func (data openBarData) save(destination string) {
 	formatedData, _ := json.MarshalIndent(data, "", "	")
 	if err := ioutil.WriteFile(destination, formatedData, os.ModePerm); err != nil {
 		log.Println("Something went wrong")

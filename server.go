@@ -125,9 +125,7 @@ func (c client) sender() {
 				return
 			}
 		}
-
 	}
-
 }
 
 func (clients clientSlice) broadcast(msgType int, msg []byte) {
@@ -146,6 +144,8 @@ func handleEvent(event websocketEvent) ([]byte, error) {
 		data.Users = append(data.Users, user)
 	case "updateDebt":
 		answer = event
+		handleHistory(event)
+		// saving locally
 		for id, user := range data.Users {
 			if user.ID == event.ID {
 				data.Users[id].Debt = event.Debt
@@ -157,6 +157,27 @@ func handleEvent(event websocketEvent) ([]byte, error) {
 	default:
 		return make([]byte, 0), errors.New("Unknown type event")
 	}
-	save(data, historyFile)
+	data.save(historyFile)
 	return json.Marshal(answer)
+}
+
+func handleHistory(event websocketEvent) {
+	var newDebt int
+	for _, user := range data.Users {
+		if user.ID == event.ID {
+			newDebt = event.Debt - user.Debt
+		}
+	}
+	lastHistory := data.History[len(data.History)-1]
+	if lastHistory.TargetID == event.ID {
+		lastHistory.NewDebt = lastHistory.NewDebt + newDebt
+		if lastHistory.NewDebt == 0 {
+			data.History = data.History[:len(data.History)-1]
+		} else {
+			data.History[len(data.History)-1] = lastHistory
+		}
+	} else {
+		history := history{Date: time.Now(), TargetID: event.ID, NewDebt: newDebt}
+		data.History = append(data.History, history)
+	}
 }
