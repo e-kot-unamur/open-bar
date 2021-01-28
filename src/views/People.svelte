@@ -9,14 +9,19 @@
 </script>
 
 <Container>
-  {#if $store.users && $store.users.length}
-    <Separator>
-      <span slot="title">People</span>
-      <span slot="body">
+  <Separator>
+    <span slot="title">People</span>
+
+    <span slot="body">
+      {#if $store.users?.length}
         Press on the desired participant to add a bar, or long press to remove
         one
-      </span>
-    </Separator>
+      {:else}
+        Start by adding someone first !
+      {/if}
+    </span>
+  </Separator>
+  {#if $store.users}
     {#each $store.users as { id, name, debt }}
       <Card
         on:shortclick={() => store.updateDebt(id, debt + 1)}
@@ -31,11 +36,6 @@
         </span>
       </Card>
     {/each}
-  {:else}
-    <Separator>
-      <span slot="title">There is nothing here yet...</span>
-      <span slot="body">Start by adding someone first !</span>
-    </Separator>
   {/if}
 </Container>
 

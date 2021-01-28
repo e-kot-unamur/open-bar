@@ -5,6 +5,7 @@ import ws from "./websocket.js";
 const store = writable({
   price: undefined,
   users: undefined,
+  history: undefined,
 });
 
 ws.subscribe((socket) => {

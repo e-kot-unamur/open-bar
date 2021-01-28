@@ -30,7 +30,7 @@ type userData struct {
 
 type history struct {
 	Date         time.Time `json:"date"`
-	TargetID     int       `json:"target"`
+	TargetID     int       `json:"targetId"`
 	NumberOfBars int       `json:"numberOfBars"`
 }
 

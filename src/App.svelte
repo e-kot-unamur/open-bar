@@ -4,6 +4,7 @@
   import People from "./views/People.svelte";
   import Settings from "./views/Settings.svelte";
   import store from "./store.js";
+import History from "./views/History.svelte";
 
   let loading;
 
@@ -12,7 +13,7 @@
 
 <main>
   <Topbar {loading} />
-  <Switcher views={{ People, Settings }} />
+  <Switcher views={{ People, History, Settings }} />
 </main>
 
 <style>

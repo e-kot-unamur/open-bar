@@ -168,6 +168,30 @@ func handleHistory(event websocketEvent) {
 			numberOfBars = event.Debt - user.Debt
 		}
 	}
-	history := history{time.Now(), event.ID, numberOfBars}
-	data.History = append(data.History, history)
+
+	// History is empty
+	if len(data.History) < 1 {
+		history := history{time.Now(), event.ID, numberOfBars}
+		data.History = append(data.History, history)
+		return
+	}
+
+	// History is not empty
+	lastHistory := data.History[len(data.History)-1]
+	end := lastHistory.Date.Add(2 * time.Minute)
+	now := time.Now()
+	inTimeSpan := now.After(lastHistory.Date) && now.Before(end)
+
+	// Was last request was made to the same guy & within two minutes ?
+	if lastHistory.TargetID == event.ID && inTimeSpan {
+		lastHistory.NumberOfBars = lastHistory.NumberOfBars + numberOfBars
+		if lastHistory.NumberOfBars == 0 {
+			data.History = data.History[:len(data.History)-1]
+		} else {
+			data.History[len(data.History)-1] = lastHistory
+		}
+	} else {
+		history := history{time.Now(), event.ID, numberOfBars}
+		data.History = append(data.History, history)
+	}
 }
