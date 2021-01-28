@@ -162,22 +162,12 @@ func handleEvent(event websocketEvent) ([]byte, error) {
 }
 
 func handleHistory(event websocketEvent) {
-	var newDebt int
+	var numberOfBars int
 	for _, user := range data.Users {
 		if user.ID == event.ID {
-			newDebt = event.Debt - user.Debt
+			numberOfBars = event.Debt - user.Debt
 		}
 	}
-	lastHistory := data.History[len(data.History)-1]
-	if lastHistory.TargetID == event.ID {
-		lastHistory.NewDebt = lastHistory.NewDebt + newDebt
-		if lastHistory.NewDebt == 0 {
-			data.History = data.History[:len(data.History)-1]
-		} else {
-			data.History[len(data.History)-1] = lastHistory
-		}
-	} else {
-		history := history{Date: time.Now(), TargetID: event.ID, NewDebt: newDebt}
-		data.History = append(data.History, history)
-	}
+	history := history{time.Now(), event.ID, numberOfBars}
+	data.History = append(data.History, history)
 }

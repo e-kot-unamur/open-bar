@@ -4,8 +4,17 @@
   import Separator from "../components/Separator.svelte";
   import store from "../store";
 
-  $: store.updatePrice($store.price); 
+  function updatePrice(float) {
+    store.updatePrice(parseFloat(($store.price + float).toFixed(2)));
+  }
 </script>
+
+<style>
+  button {
+    width: 5rem;
+    margin: 10px;
+  }
+</style>
 
 <Container>
   <Separator>
@@ -15,14 +24,9 @@
   <Card>
     <span slot="title"> Price </span>
     <span slot="body">
-      <input
-        type="number"
-        id="price"
-        min="0.01"
-        max="1.5"
-        step="0.01"
-        bind:value={$store.price}
-      />
+      <button on:click={() => updatePrice(-0.01)}>-</button>
+      {($store.price).toFixed(2)}€
+      <button on:click={() => updatePrice(0.01)}>+</button>
     </span>
   </Card>
 

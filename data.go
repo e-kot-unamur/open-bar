@@ -29,9 +29,9 @@ type userData struct {
 }
 
 type history struct {
-	Date     time.Time `json:"date"`
-	TargetID int       `json:"target"`
-	NewDebt  int       `json:"newDebt"`
+	Date         time.Time `json:"date"`
+	TargetID     int       `json:"target"`
+	NumberOfBars int       `json:"numberOfBars"`
 }
 
 type openBarData struct {
