@@ -14,7 +14,7 @@
             {/if}
         </span>
     </Separator>
-    {#each $store.history.reverse() as { date, targetId, numberOfBars }}
+    {#each $store.history?.reverse()??[] as { date, targetId, numberOfBars }}
         <Card>
             <!-- FIXME : change users to a Map with the user id as the key ! -->
             <span slot="title">{$store.users[targetId].name}</span>
