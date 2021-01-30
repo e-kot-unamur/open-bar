@@ -1,6 +1,5 @@
-<div style="font-size:4rem; font-weight:100; text-align:center;">OpenBar</div>
+# OpenBar
 
---------
 
 > Somebody once said, if you don't have a page and a pen, just set up a server.
 
