@@ -10,17 +10,11 @@ const store = writable({
 
 ws.subscribe((socket) => {
 
-  socket.onerror = socket.onclose = () => {
-    console.error("Connection with server lost");
-  }
-
   socket.onmessage = (e) => {
     const message = JSON.parse(e.data);
-    console.log(message);
 
     switch (message.type) {
       case "allData":
-        console.log(message.all);
         store.set(message.all);
         break;
       case "newUser":

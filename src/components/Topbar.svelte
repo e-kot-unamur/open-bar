@@ -22,13 +22,17 @@
   }
 
   // This is used as a loading screen
-  $: !loading && setTimeout(minimize, 1000);
+  $: if (loading) {
+    maximize();
+  } else {
+    setTimeout(minimize, 1000);
+  };
 </script>
 
 <div class="topbar" bind:this={component}>
   <div class="title">OpenBar</div>
   {#if loading}
-    <div class="loader">Loading...</div>
+    <div class="loader">Establishing connection with the server...</div>
   {/if}
 </div>
 
@@ -55,11 +59,12 @@
     font-weight: 200;
   }
   .loader {
-    position: absolute;
+    position: fixed;
     bottom: 1rem;
-    width: 100%;
+    left: 0;
+    right: 0;
     line-height: initial;
-    font-size: 1.7rem;
+    font-size: 1rem;
     font-weight: 100;
   }
 </style>
