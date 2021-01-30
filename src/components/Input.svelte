@@ -13,7 +13,7 @@
 
 {#if show}
   <div in:fade class="background" on:click={() => dispatch("cancel")}>
-    <div class="container">
+    <div class="container" on:click|stopPropagation>
       <label for="name">Name :</label>
       <input type="text" id="name" maxlength="15" bind:value={name} />
       <button
@@ -29,7 +29,6 @@
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 1000;
     width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);

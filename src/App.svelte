@@ -1,10 +1,10 @@
 <script>
   import Switcher from "./components/Switcher.svelte";
   import Topbar from "./components/Topbar.svelte";
-  import People from "./views/People.svelte";
-  import Settings from "./views/Settings.svelte";
+  import People from "./views/people/People.svelte";
+  import Settings from "./views/settings/Settings.svelte";
+  import History from "./views/history/History.svelte";
   import store from "./store.js";
-  import History from "./views/History.svelte";
 
   let loading;
 
