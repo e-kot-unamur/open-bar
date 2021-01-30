@@ -43,6 +43,7 @@
     store.addParticipant(e.detail);
     showInput = false;
   }}
+  on:cancel={() => (showInput = false)}
   show={showInput}
 />
 
@@ -54,13 +55,13 @@
 
   .add-btn {
     position: fixed;
-    bottom: 1rem;
-    right: 1rem;
+    margin: 1rem;
+    bottom: 0;
     z-index: 100;
     background-color: var(--primary);
     width: 2.5rem;
     height: 2.5rem;
-    line-height: 2.5rem;
+    line-height: 2.3rem;
     text-align: center;
     border-radius: 100%;
     user-select: none;

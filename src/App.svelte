@@ -4,10 +4,13 @@
   import People from "./views/People.svelte";
   import Settings from "./views/Settings.svelte";
   import store from "./store.js";
-import History from "./views/History.svelte";
+  import History from "./views/History.svelte";
 
   let loading;
 
+  // FIXME : do not use the price as a ref...
+  // This induce a dependance from front to back based on go default type...
+  // Instead We could watch the websocket connection state
   $: loading = $store.price === undefined;
 </script>
 
@@ -21,10 +24,15 @@ import History from "./views/History.svelte";
     --primary: #272932;
     --highlight: #1de068;
     color: #fff;
+    display: flex;
+    justify-content: center;
+    background-color: var(--primary);
   }
   main {
-    width: 100%;
     height: 100%;
+    width: 100%;
+    max-width: 50rem;
+    background-color: #fff;
     display: flex;
     flex-direction: column;
     overflow: hidden;

@@ -34,7 +34,7 @@
   .body {
     width: 100%;
     min-height: 1rem;
-    font-weight: 400;
+    font-weight: 200;
     text-align: end;
     overflow: hidden;
     word-break: break-all;

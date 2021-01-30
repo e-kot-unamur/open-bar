@@ -12,7 +12,7 @@
 </script>
 
 {#if show}
-  <div in:fade class="background">
+  <div in:fade class="background" on:click={() => dispatch("cancel")}>
     <div class="container">
       <label for="name">Name :</label>
       <input type="text" id="name" maxlength="15" bind:value={name} />
