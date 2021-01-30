@@ -182,7 +182,7 @@ func handleHistory(event websocketEvent) {
 	now := time.Now()
 	inTimeSpan := now.After(lastHistory.Date) && now.Before(end)
 
-	// Was last request was made to the same guy & within two minutes ?
+	// Was last request made to the same guy & within two minutes ?
 	if lastHistory.TargetID == event.ID && inTimeSpan {
 		lastHistory.NumberOfBars = lastHistory.NumberOfBars + numberOfBars
 		if lastHistory.NumberOfBars == 0 {

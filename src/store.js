@@ -25,7 +25,7 @@ ws.subscribe((socket) => {
         break;
       case "newUser":
         store.update((value) => {
-          value.users = [...value.users??[], message.user];
+          value.users = [...value.users ?? [], message.user];
           return value;
         })
         break;
@@ -36,16 +36,48 @@ ws.subscribe((socket) => {
         })
         break;
       case "updateDebt":
-        store.update((value) => {
-          value.users.map(user => {
-            if (user.id === message.id) user.debt = message.debt;
-          })
-          return value;
-        })
+        handleHistory(message);
+        updateDebt(message);
         break;
     }
   }
 })
+
+function handleHistory(event) {
+  store.update(({ price, users, history }) => {
+    let numberOfBars;
+    users.map(user =>
+      numberOfBars = (user.id === event.id) ? (event.debt - user.debt) : numberOfBars);
+    if (!numberOfBars) return;
+
+    if (history.length > 0) {
+      const [lastHistory] = history.slice(-1);
+
+      const then = new Date(lastHistory.date);
+      const end = new Date(then.getTime() + 2 * 60000); // then + 2 minutes
+      const now = new Date();
+      const inTimeSpan = now <= end && now >= then; //TODO
+      
+      if (lastHistory.targetId === event.id && inTimeSpan) {
+        lastHistory.numberOfBars += numberOfBars;
+        (lastHistory.numberOfBars === 0) && history.pop();
+        return { price, users, history }
+      }
+    }
+
+    history.push({ date: Date.now(), targetId: event.id, numberOfBars });
+    return { price, users, history }
+  })
+}
+
+function updateDebt(event) {
+  store.update((value) => {
+    value.users.map(user => {
+      if (user.id === event.id) user.debt = event.debt;
+    })
+    return value;
+  })
+}
 
 export default {
   subscribe: store.subscribe,
