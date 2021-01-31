@@ -42,16 +42,16 @@ function handleHistory(event) {
     let numberOfBars;
     users.map(user =>
       numberOfBars = (user.id === event.id) ? (event.debt - user.debt) : numberOfBars);
-    if (!numberOfBars) return;
+    if (!numberOfBars) return { price, users, history };
 
-    if (history.length > 0) {
+    if (history?.length > 0) {
       const [lastHistory] = history.slice(-1);
 
       const then = new Date(lastHistory.date);
       const end = new Date(then.getTime() + 2 * 60000); // then + 2 minutes
       const now = new Date();
       const inTimeSpan = now <= end && now >= then; //TODO
-      
+
       if (lastHistory.targetId === event.id && inTimeSpan) {
         lastHistory.numberOfBars += numberOfBars;
         (lastHistory.numberOfBars === 0) && history.pop();
@@ -66,9 +66,9 @@ function handleHistory(event) {
 
 function updateDebt(event) {
   store.update((value) => {
-    value.users.map(user => {
+    value.users?.map(user => {
       if (user.id === event.id) user.debt = event.debt;
-    })
+    });
     return value;
   })
 }
