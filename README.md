@@ -13,22 +13,25 @@ Keep tracks of your drink consumption with your friends.
 
 
 
+
 ## Getting started
 
 You'll need Golang and Node.js installed on your machine.
 
 ```bash
-# Install dependencies
-npm install
-go get ./...
-
-# Build sources
+# Install dependencies & build sources for client
+cd client/ 
+npm install 
 npm run build
-go build main.go server.go data.go
 
-# Run program
-chmod +x main
-./main
+# Install dependencies & build sources for server
+cd ../server/ 
+go get ./... 
+go build -o app main.go server.go data.go
+
+# Run it !
+chmod +x app
+./app
 ```
 
 Grab a beer and go over your [localhost on port 8000](http://localhost:8000).
