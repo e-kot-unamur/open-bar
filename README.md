@@ -7,6 +7,12 @@ Keep tracks of your drink consumption with your friends.
 
 
 
+<p align="center">
+  <img src="./demo.gif">
+</p>
+
+
+
 ## Getting started
 
 You'll need Golang and Node.js installed on your machine.
