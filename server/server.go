@@ -25,7 +25,7 @@ type client struct {
 type clientSlice []client
 
 func setupRoutes() {
-	http.Handle("/", http.FileServer(http.Dir("./public")))
+	http.Handle("/", http.FileServer(http.Dir("../client/public")))
 	http.HandleFunc("/ws", handleWs)
 }
 
