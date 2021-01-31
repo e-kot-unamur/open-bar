@@ -59,7 +59,7 @@ function handleHistory(event) {
       }
     }
 
-    history.push({ date: Date.now(), targetId: event.id, numberOfBars });
+    history = history ?? [].push({ date: Date.now(), targetId: event.id, numberOfBars });
     return { price, users, history }
   })
 }
