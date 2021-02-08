@@ -1,4 +1,4 @@
-# OpenBar
+<h1 align="center">OpenBar</h1>
 
 
 > Somebody once said, if you don't have a page and a pen, just set up a server.
