@@ -42,7 +42,7 @@ function handleHistory(event) {
     let numberOfBars;
     users.map(user =>
       numberOfBars = (user.id === event.id) ? (event.debt - user.debt) : numberOfBars);
-    if (!numberOfBars) return { price, users, history };
+    if (typeof numberOfBars === "undefined") return { price, users, history };
 
     if (history?.length > 0) {
       const [lastHistory] = history.slice(-1);
@@ -59,7 +59,10 @@ function handleHistory(event) {
       }
     }
 
-    history = history ?? [].push({ date: Date.now(), targetId: event.id, numberOfBars });
+    history = [
+      ...(history ?? []),
+      { date: Date.now(), targetId: event.id, numberOfBars }
+    ];
     return { price, users, history }
   })
 }
