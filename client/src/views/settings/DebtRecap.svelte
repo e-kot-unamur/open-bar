@@ -2,7 +2,6 @@
   import Card from "../../components/Card.svelte";
   import Separator from "../../components/Separator.svelte";
   import store from "../../store";
-  import DebtReset from "./DebtReset.svelte";
 </script>
 
 <Separator>
@@ -15,8 +14,6 @@
     {/if}
   </span>
 </Separator>
-
-<DebtReset />
 
 {#each $store.users ?? [] as { id, name, debt }}
   <Card important on:longclick={() => store.updateDebt(id, 0)}>
