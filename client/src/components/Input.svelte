@@ -2,7 +2,10 @@
   import { createEventDispatcher } from "svelte";
   import { fade } from "svelte/transition";
 
+  // TODO : refactor me bro
+
   export let show = false;
+  export let type = "text";
 
   let name = "";
 
@@ -14,12 +17,19 @@
 {#if show}
   <div in:fade class="background" on:click={() => dispatch("cancel")}>
     <div class="container" on:click|stopPropagation>
-      <label for="name">Name :</label>
-      <input type="text" id="name" maxlength="15" bind:value={name} />
-      <button
-        disabled={!(name.length > 2)}
-        on:click={() => dispatch("confirm", name)}>Ok</button
-      >
+      {#if type === "text"}
+        <label for="name">Name :</label>
+        <input type="text" id="name" maxlength="15" bind:value={name} />
+        <button
+          disabled={!(name.length > 2)}
+          on:click={() => dispatch("confirm", name)}>Ok</button
+        >
+      {:else if type === "confirm"}
+        <slot name="confirm-text" />
+        <button on:click={() => dispatch("confirm")}>
+          <slot name="confirm-btn" />
+        </button>
+      {/if}
     </div>
   </div>
 {/if}

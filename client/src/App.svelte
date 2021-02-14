@@ -16,6 +16,7 @@
   :global(body) {
     --primary: #272932;
     --highlight: #1de068;
+    --important: #FF4365;
     color: #fff;
     display: flex;
     justify-content: center;

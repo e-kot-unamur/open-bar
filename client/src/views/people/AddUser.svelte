@@ -12,6 +12,7 @@
 
 <div class="add-btn" on:click={() => (showInput = true)}>+</div>
 <Input
+  type="text"
   on:confirm={addParticipant}
   on:cancel={() => (showInput = false)}
   show={showInput}

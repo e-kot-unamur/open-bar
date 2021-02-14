@@ -1,9 +1,11 @@
 <script>
   import { handleClickDuration as clickduration } from "./clickduration";
+
+  export let important = false;
 </script>
 
 <div
-  class="card"
+  class="card {important && 'important'}"
   use:clickduration
   on:longclick
   on:shortclick
@@ -34,7 +36,7 @@
   .body {
     width: 100%;
     min-height: 1rem;
-    font-weight: 200;
+    font-weight: 300;
     text-align: end;
     overflow: hidden;
     word-break: break-all;
@@ -42,5 +44,8 @@
   }
   .card:active {
     background-color: var(--highlight);
+  }
+  .important:active {
+    background-color: var(--important) !important;
   }
 </style>
