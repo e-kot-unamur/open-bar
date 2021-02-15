@@ -16,7 +16,7 @@ type websocketEvent struct {
 	Name             string  `json:"name"`
 	Debt             int     `json:"debt"`
 	Price            float64 `json:"price"`
-	ResetParticipant bool    `json:"resetParticipant"`
+	KeepParticipants bool    `json:"keepParticipants"`
 }
 
 // Following structures are the answers to websocket received events
@@ -41,11 +41,6 @@ type updateDebtAnswer struct {
 	Type string `json:"type"`
 	ID   int    `json:"id"`
 	Debt int    `json:"debt"`
-}
-
-type resetAnswer struct {
-	Type             string `json:"type"`
-	ResetParticipant bool   `json:"resetParticipant"`
 }
 
 ////////////////////////////////////////////////////

@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -136,7 +135,7 @@ func (clients clientSlice) broadcast(msgType int, msg []byte) {
 }
 
 func handleEvent(event websocketEvent) ([]byte, error) {
-	defer data.save(historyFile)
+	defer func() { (data.save)(historyFile) }()
 	switch event.Type {
 	case "newUser":
 		user := userData{len(data.Users), event.Name, 0}
@@ -158,9 +157,19 @@ func handleEvent(event websocketEvent) ([]byte, error) {
 		data.Price = event.Price
 		return json.Marshal(answer)
 	case "reset":
-		fmt.Println(event)
-		// TODO
-		return json.Marshal(event)
+		// Saving on a file
+		data.save(time.Now().Format("2 Jan, 2006 15:04"))
+		// Reinitializing to default go values
+		data.History = nil
+		if event.KeepParticipants {
+			for _, user := range data.Users {
+				user.Debt = 0
+			}
+		} else {
+			data.Users = nil
+		}
+		answer := allDataAnswer{Type: "allData", Data: data}
+		return json.Marshal(answer)
 
 	default:
 		return nil, errors.New("Unknown type event")

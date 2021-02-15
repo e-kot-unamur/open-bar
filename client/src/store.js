@@ -82,5 +82,5 @@ export default {
   addParticipant: (name) => ws.send({ type: "newUser", name }),
   updatePrice: (price) => ws.send({ type: "updatePrice", price }),
   updateDebt: (id, int) => ws.send({ type: "updateDebt", id, debt: int }),
-  reset: (resetParticipant) => ws.send({ type: "reset", resetParticipant }),
+  reset: (keepParticipants) => ws.send({ type: "reset", keepParticipants }),
 };
