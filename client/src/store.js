@@ -19,7 +19,7 @@ ws.subscribe((socket) => {
         break;
       case "newUser":
         store.update((value) => {
-          value.users = [...value.users ?? [], message.user];
+          value.users = [...(value.users ?? []), message.user];
           return value;
         })
         break;
@@ -82,4 +82,5 @@ export default {
   addParticipant: (name) => ws.send({ type: "newUser", name }),
   updatePrice: (price) => ws.send({ type: "updatePrice", price }),
   updateDebt: (id, int) => ws.send({ type: "updateDebt", id, debt: int }),
+  reset: (resetParticipant) => ws.send({ type: "reset", resetParticipant }),
 };
