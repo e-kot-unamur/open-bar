@@ -8,20 +8,47 @@ import (
 	"time"
 )
 
-// TODO payload optimization:
-// each field gets send with
-// the its default value type
-// single every time
+// This is generic to all received events
 type websocketEvent struct {
-	Type  string      `json:"type"`
-	ID    int         `json:"id"`
-	Name  string      `json:"name"`
-	Debt  int         `json:"debt"`
-	Price float64     `json:"price"`
-	User  userData    `json:"user"`
-	All   openBarData `json:"all"`
+	Type string `json:"type"`
+
+	ID               int     `json:"id"`
+	Name             string  `json:"name"`
+	Debt             int     `json:"debt"`
+	Price            float64 `json:"price"`
+	ResetParticipant bool    `json:"resetParticipant"`
 }
 
+// Following structures are the answers to websocket received events
+// They keep the same Type, keep fields or adapt them and have the
+// purpose to clear unused fields to reduce network payloads
+type allDataAnswer struct {
+	Type string      `json:"type"`
+	Data openBarData `json:"data"`
+}
+
+type newUserAnswer struct {
+	Type string   `json:"type"`
+	User userData `json:"user"`
+}
+
+type updatePriceAnswer struct {
+	Type  string  `json:"type"`
+	Price float64 `json:"price"`
+}
+
+type updateDebtAnswer struct {
+	Type string `json:"type"`
+	ID   int    `json:"id"`
+	Debt int    `json:"debt"`
+}
+
+type resetAnswer struct {
+	Type             string `json:"type"`
+	ResetParticipant bool   `json:"resetParticipant"`
+}
+
+////////////////////////////////////////////////////
 type userData struct {
 	ID   int    `json:"id"`
 	Name string `json:"name"`

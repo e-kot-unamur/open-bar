@@ -15,7 +15,7 @@ ws.subscribe((socket) => {
 
     switch (message.type) {
       case "allData":
-        store.set(message.all);
+        store.set(message.data);
         break;
       case "newUser":
         store.update((value) => {

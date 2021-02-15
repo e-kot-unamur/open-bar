@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -54,7 +55,7 @@ func handleWs(writer http.ResponseWriter, req *http.Request) {
 	go client.sender()
 
 	// Send user the saved data
-	all := websocketEvent{Type: "allData", All: data}
+	all := allDataAnswer{Type: "allData", Data: data}
 	if allByte, err := json.Marshal(all); err != nil {
 		log.Println(err)
 	} else {
@@ -135,33 +136,38 @@ func (clients clientSlice) broadcast(msgType int, msg []byte) {
 }
 
 func handleEvent(event websocketEvent) ([]byte, error) {
-	log.Println("New event received ", event.Type)
-	var answer websocketEvent
+	defer data.save(historyFile)
 	switch event.Type {
 	case "newUser":
 		user := userData{len(data.Users), event.Name, 0}
-		answer = websocketEvent{Type: "newUser", User: user}
+		answer := newUserAnswer{Type: event.Type, User: user}
 		data.Users = append(data.Users, user)
+		return json.Marshal(answer)
 	case "updateDebt":
-		answer = event
-		handleHistory(event)
+		answer := updateDebtAnswer{Type: event.Type, ID: event.ID, Debt: event.Debt}
+		handleHistory(answer)
 		// saving locally
 		for id, user := range data.Users {
 			if user.ID == event.ID {
 				data.Users[id].Debt = event.Debt
 			}
 		}
+		return json.Marshal(answer)
 	case "updatePrice":
-		answer = event
+		answer := updatePriceAnswer{Type: event.Type, Price: event.Price}
 		data.Price = event.Price
+		return json.Marshal(answer)
+	case "reset":
+		fmt.Println(event)
+		// TODO
+		return json.Marshal(event)
+
 	default:
-		return make([]byte, 0), errors.New("Unknown type event")
+		return nil, errors.New("Unknown type event")
 	}
-	data.save(historyFile)
-	return json.Marshal(answer)
 }
 
-func handleHistory(event websocketEvent) {
+func handleHistory(event updateDebtAnswer) {
 	var numberOfBars int
 	for _, user := range data.Users {
 		if user.ID == event.ID {
