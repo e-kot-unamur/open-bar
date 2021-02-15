@@ -162,8 +162,8 @@ func handleEvent(event websocketEvent) ([]byte, error) {
 		// Reinitializing to default go values
 		data.History = nil
 		if event.KeepParticipants {
-			for _, user := range data.Users {
-				user.Debt = 0
+			for i := range data.Users {
+				data.Users[i].Debt = 0.0
 			}
 		} else {
 			data.Users = nil

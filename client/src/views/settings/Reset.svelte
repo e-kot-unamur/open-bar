@@ -21,13 +21,13 @@
 
   <Card important on:longclick={() => handleClick(true)}>
     <div class="card-title" slot="title">
-      Reset all debts but keep participants
+      Reset all debts and history
     </div>
   </Card>
 
   <Card important on:longclick={() => handleClick(false)}>
     <div class="card-title" slot="title">
-      Reset all debts and delete all participants
+      Reset debts, history and all participants
     </div>
   </Card>
 
